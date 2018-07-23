@@ -1,0 +1,24 @@
+.cell {
+  flex: 0 1 25%;
+  padding: 15px;
+  margin: 10px auto;
+  color: #fff;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.cell-A {
+  background: #EE6352;
+}
+
+.cell-B {
+  background: #797596;
+}
+
+.cell-C {
+  background: #17B890;
+}
+
+.loading {
+  background: rgb(201, 201, 201);
+}

@@ -1,0 +1,42 @@
+body {
+  font-family: Arial, Helvetica, sans-serif
+}
+
+.wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.header {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.header,
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px auto;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button {
+  font-size: 26px;
+  background: #008BF8;
+  color: #fff;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px 30px;
+}
+
+.win {
+  margin-top: 15px;
+  color: #57A773;
+  font-size: 26px;
+}
