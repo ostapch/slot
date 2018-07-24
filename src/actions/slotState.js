@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { normalize } from 'normalizr';
+import * as schema from './schema';
 
 export const GET_STATE_START = 'GET_STATE_START';
 export const GET_STATE_SUCCESS = 'GET_STATE_SUCCESS';
@@ -25,6 +27,10 @@ export const getState = () => dispatch => {
     method: 'get',
     url: '/state',
   })
-    .then(res => dispatch(getStateSuccess(res.data)))
+    .then(res => {
+      const normalizedData = normalize(res.data, schema.slotState);
+      dispatch(getStateSuccess(normalizedData));
+      return normalizedData;
+    })
     .catch(error => dispatch(getStateFail(error)));
 }

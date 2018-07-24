@@ -9,7 +9,7 @@ import { reset } from './actions/reset';
 import { getConfiguration } from './actions/configuration';
 import { getState } from './actions/slotState';
 import { spin } from './actions/spin';
-import Line from './components/Line';
+import Row from './components/Row';
 import Errors from './components/Errors';
 
 const mapStateToProps = ({ configuration, slotState }) => ({
@@ -36,7 +36,7 @@ class App extends Component {
   init = async () => {
     await this.props.actions.reset();
     this.props.actions.getConfiguration().then(configuration => {
-      this.setState({ lineBet: configuration.minCoins });
+      this.setState({ lineBet: configuration.result.minCoins });
     });
     this.props.actions.getState();
   };
@@ -44,7 +44,7 @@ class App extends Component {
   spin = () => {
     this.props.actions.spin(
       this.state.lineBet,
-      this.props.configuration.rows
+      this.props.configuration.result.rows
     );
   };
 
@@ -56,14 +56,27 @@ class App extends Component {
     const { configuration, slotState } = this.props;
     const { lineBet } = this.state;
 
-    const coins = slotState.balance
-      && configuration.coinValue
-      && Number(slotState.balance / configuration.coinValue).toFixed(2);
+    const coins = slotState.result
+      && configuration.result
+      && slotState.result.balance
+      && configuration.result.coinValue
+      && Number(slotState.result.balance / configuration.result.coinValue).toFixed(2);
+
+    let rows = [];
+
+    if (configuration.result && configuration.result.rows) {
+      for (let i = 0; i < configuration.result.rows; i++) {
+        rows.push(<Row key={i} row={i} reels={configuration.result.reels} />);
+      }
+    }
 
     return (
       <div className="wrapper">
         <header className="header">
-          <span>Balance: {slotState.balance ? `€${slotState.balance}` : '...'}</span>
+          <span>
+            Balance:&nbsp;
+            {slotState.result && slotState.result.balance ? `€${slotState.result.balance}` : '...'}
+          </span>
           <span>Coins: {coins || '...'}</span>
         </header>
 
@@ -72,8 +85,8 @@ class App extends Component {
             && <div>
                 Line Bet:&nbsp;
                 <InputNumber
-                  min={configuration.minCoins}
-                  max={configuration.maxCoins}
+                  min={configuration.result.minCoins}
+                  max={configuration.result.maxCoins}
                   step={1}
                   value={lineBet}
                   style={{ width: 80 }}
@@ -83,32 +96,19 @@ class App extends Component {
                 conins
               </div>}
           <div>
-            Coin Value: {configuration.coinValue || '...'}
+            Coin Value: {configuration.result ? configuration.result.coinValue : '...'}
           </div>
         </div>
 
         <div>
-          {configuration.loading
-            ? 'Loading...'
-            : configuration.lines && slotState.lineResults &&
-              configuration.lines.map(({ id, cells }) => (
-                <Line
-                  key={id}
-                  cells={cells}
-                  isWinning={
-                    !slotState.loading
-                    && slotState.lineResults.length
-                    && slotState.lineResults.find(({ lineId }) => id === lineId).win
-                  }
-                />
-              ))}
+          {configuration.loading && !configuration.result ? 'Loading...' : rows}
         </div>
 
         <footer className="footer">
           <button onClick={this.spin} className="button">Spin</button>
-          {slotState.totalWin && !slotState.loading
+          {!slotState.loading && slotState.result && slotState.result.totalWin
             ? <div className="win animated flash">
-                Win: {slotState.totalWin}
+                Win: {slotState.result.totalWin}
               </div>
             : null}
         </footer>

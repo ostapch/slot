@@ -5,6 +5,7 @@
   "dependencies": {
     "animate.css": "^3.6.1",
     "axios": "^0.18.0",
+    "normalizr": "^3.2.4",
     "rc-input-number": "^4.0.12",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",

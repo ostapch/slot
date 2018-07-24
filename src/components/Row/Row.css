@@ -1,0 +1,12 @@
+.row {
+  border-bottom: 1px solid #ccc;
+}
+
+.row-inner {
+  display: flex;
+  justify-content: space-around;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}

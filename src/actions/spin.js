@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { normalize } from 'normalizr';
+import * as schema from './schema';
 
 export const SPIN_START = 'SPIN_START';
 export const SPIN_SUCCESS = 'SPIN_SUCCESS';
@@ -25,6 +27,10 @@ export const spin = (lineBet, linesCount) => dispatch => {
     method: 'get',
     url: `/spin?lineBet=${lineBet}&linesCount=${linesCount}`,
   })
-    .then(res => dispatch(spinSuccess(res.data)))
+    .then(res => {
+      const normalizedData = normalize(res.data, schema.slotState);
+      dispatch(spinSuccess(normalizedData));
+      return normalizedData;
+    })
     .catch(error => dispatch(spinFail(error)));
 }

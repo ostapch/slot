@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { normalize } from 'normalizr';
+import * as schema from './schema';
 
 export const GET_CONFIGURATION_START = 'GET_CONFIGURATION_START';
 export const GET_CONFIGURATION_SUCCESS = 'GET_CONFIGURATION_SUCCESS';
@@ -26,8 +28,9 @@ export const getConfiguration = () => dispatch => {
     url: '/config',
   })
     .then(res => {
-      dispatch(getConfigurationSuccess(res.data));
-      return res.data;
+      const normalizedData = normalize(res.data, schema.configuration);
+      dispatch(getConfigurationSuccess(normalizedData));
+      return normalizedData;
     })
     .catch(error => dispatch(getConfigurationFail(error)));
 }
